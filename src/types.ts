@@ -10,7 +10,6 @@ export interface MAJIK_API_RESPONSE {
   code?: string;
 }
 
-
 export interface MajikMessageIdentityJSON {
   id: string;
   user_id: string;
@@ -61,4 +60,44 @@ export interface MajikContactCard {
   mlKey: string;
   edPublicKeyBase64?: string; // Ed25519 public key, base64 (32 bytes)
   mlDsaPublicKeyBase64?: string; // ML-DSA-87 public key, base64 (2592 bytes)
+}
+
+/* -------------------------------
+ * Types
+ * ------------------------------- */
+
+export interface MajikContactGroupMeta {
+  name: string;
+  description: string;
+  photoBase64: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface MajikContactGroupData {
+  id: string;
+  meta?: Partial<MajikContactGroupMeta>;
+  memberIds?: string[];
+  isSystem?: boolean;
+}
+
+export interface SerializedMajikContactGroup {
+  id: string;
+  meta: MajikContactGroupMeta;
+  memberIds: string[];
+  isSystem: boolean;
+}
+
+
+export interface MajikContactGroupSetOptions {
+  /**
+   * Override the ID for the resulting group.
+   * Defaults to the ID of the first group in the array when not provided.
+   */
+  id?: string;
+  /**
+   * Override the name for the resulting group.
+   * Defaults to the name of the first group in the array when not provided.
+   */
+  name?: string;
 }

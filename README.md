@@ -4,7 +4,7 @@
 
 A lightweight, cryptographically secure contact model for building zero-trust, end-to-end encrypted systems.
 
-@majikah/majik-contact provides a structured way to represent identities using public keys, fingerprints, and post-quantum–ready cryptography (ML-KEM, ML-DSA), designed for use in Majikah and similar decentralized or secure messaging applications.
+@majikah/majik-contact provides a structured way to represent identities using public keys, fingerprints, and post-quantum–ready cryptography (ML-KEM, ML-DSA). It is designed for use within the Majikah ecosystem and other decentralized messaging applications.
 
 ![npm](https://img.shields.io/npm/v/@majikah/majik-contact) ![npm downloads](https://img.shields.io/npm/dm/@majikah/majik-contact) [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) ![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue)
 
@@ -12,7 +12,14 @@ A lightweight, cryptographically secure contact model for building zero-trust, e
 
 - [Majik Contact](#majik-contact)
   - [Features](#features)
+    - [Individual Contacts (MajikContact)](#individual-contacts-majikcontact)
+    - [Contact Groups (MajikContactGroup)](#contact-groups-majikcontactgroup)
   - [Installation](#installation)
+  - [Usage](#usage)
+    - [Managing Individual Contacts](#managing-individual-contacts)
+    - [Managing Individual Contacts](#managing-individual-contacts-1)
+    - [Organizing Contacts into Groups](#organizing-contacts-into-groups)
+    - [Advanced Group Operations](#advanced-group-operations)
   - [Related Projects](#related-projects)
     - [Majik Message](#majik-message)
     - [Majik Signature](#majik-signature)
@@ -27,15 +34,19 @@ A lightweight, cryptographically secure contact model for building zero-trust, e
 
 ## Features
 
-- Public key–based identity (no usernames required)
-- Fingerprint-based verification
-- Post-quantum ready (ML-KEM, ML-DSA support)
-- Serialization / deserialization support
-- Contact metadata (labels, notes, blocking)
-- Supports both WebCrypto CryptoKey and raw key formats
-- Zero-trust friendly design
-  
-  
+### Individual Contacts (MajikContact)
+- **Key-Based Identity:** Uses public keys instead of usernames for identity verification.
+- **Post-Quantum Ready:** Built-in support for ML-KEM and ML-DSA standards.
+- **Hybrid Key Support:** Handles both WebCrypto CryptoKey objects and raw Uint8Array fallbacks.
+- **Status Tracking:** Native support for blocking/unblocking and Majikah registration status.
+
+### Contact Groups (MajikContactGroup)
+- **Organization:** Group identities by custom labels or system-reserved types (e.g., Favorites, Blocked).
+- **Set Operations:** Advanced membership logic including group Merging (union) and Intersection.
+- **Rich Metadata:** Supports descriptions and base64-normalized photo storage.
+- **Serialization:** Full JSON support for persistence in local storage or databases.
+
+
 ---
 
 ## Installation
@@ -48,6 +59,98 @@ npm install @majikah/majik-contact
 
 ---
 
+## Usage
+
+### Managing Individual Contacts
+The `MajikContact` class encapsulates identity data and cryptographic public keys.
+
+```bash
+
+import { MajikContact } from '@majikah/majik-contact';
+
+const contact = MajikContact.create(
+  "user-uuid",
+  publicKey, // CryptoKey or { raw: Uint8Array }
+  "ml-kem-public-key-string",
+  "fingerprint-string",
+  { label: "Alice", notes: "Met at the conference" }
+);
+
+// Update details
+contact.updateLabel("Alice (Lead Engineer)");
+contact.block();
+
+
+```
+
+---
+
+
+### Managing Individual Contacts
+The `MajikContact` class encapsulates identity data and cryptographic public keys.
+
+```bash
+
+import { MajikContact } from '@majikah/majik-contact';
+
+const contact = MajikContact.create(
+  "user-uuid",
+  publicKey, // CryptoKey or { raw: Uint8Array }
+  "ml-kem-public-key-string",
+  "fingerprint-string",
+  { label: "Alice", notes: "Met at the conference" }
+);
+
+// Update details
+contact.updateLabel("Alice (Lead Engineer)");
+contact.block();
+
+
+```
+
+
+### Organizing Contacts into Groups
+The `MajikContactGroup` class manages collections of contact IDs with built-in validation.
+
+```bash
+
+import { MajikContactGroup } from '@majikah/majik-contact';
+
+// Create a custom group and add members
+const team = MajikContactGroup.create('group-id', 'Engineering');
+team.addMember(contact.id);
+
+// Use System Groups
+const blockedList = MajikContactGroup.createBlocked();
+blockedList.addMember(contact.id);
+
+
+```
+
+### Advanced Group Operations
+Perform set operations to derive new groups without manual ID management.
+
+```bash
+
+import { MajikContactGroup } from '@majikah/majik-contact';
+
+// Intersection: Find contacts present in BOTH groups
+const priorityContacts = MajikContactGroup.intersect([team, favorites], {
+  name: "Priority Engineers"
+});
+
+// Union: Combine multiple groups into one
+const allStaff = MajikContactGroup.merge([team, designGroup], {
+  name: "All Staff"
+});
+
+
+```
+
+
+
+
+---
 
 
 ## Related Projects
