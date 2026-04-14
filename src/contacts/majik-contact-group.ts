@@ -40,6 +40,7 @@ export class MajikContactGroup {
       photoBase64: data.meta?.photoBase64 ?? null,
       createdAt: data.meta?.createdAt ?? new Date().toISOString(),
       updatedAt: data.meta?.updatedAt ?? new Date().toISOString(),
+      color: data.meta?.color ?? undefined,
     };
 
     // System groups always get their locked names — user-supplied names are ignored
@@ -116,6 +117,18 @@ export class MajikContactGroup {
       throw new MajikContactGroupError("Description must be a string");
     }
     this.meta.description = description.trim();
+    this.updateTimestamp();
+    return this;
+  }
+
+  setColor(color?: string): this {
+    this.meta.color = color?.trim();
+    this.updateTimestamp();
+    return this;
+  }
+
+  clearColor(): this {
+    this.setColor(undefined);
     this.updateTimestamp();
     return this;
   }

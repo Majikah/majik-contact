@@ -2,7 +2,7 @@
   "name": "@majikah/majik-contact",
   "type": "module",
   "description": "A cryptographically secure contact and identity model for Majikah, enabling zero-trust communication using public keys, post-quantum cryptography (ML-KEM, ML-DSA), and privacy-preserving metadata. Supports serialization, identity binding, and hybrid key formats for decentralized and end-to-end encrypted systems.",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "license": "Apache-2.0",
   "author": "Zelijah",
   "main": "./dist/index.js",

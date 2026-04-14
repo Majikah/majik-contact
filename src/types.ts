@@ -72,6 +72,7 @@ export interface MajikContactGroupMeta {
   photoBase64: string | null;
   createdAt: string;
   updatedAt: string;
+  color?: string;
 }
 
 export interface MajikContactGroupData {
