@@ -4,6 +4,7 @@
 
 import { MajikContactError } from "../errors";
 import {
+  MajikContactCard,
   MajikContactData,
   MajikContactMeta,
   MajikMessageIdentityJSON,
@@ -11,10 +12,6 @@ import {
   SerializedMajikContact,
 } from "../types";
 import { arrayBufferToBase64, base64ToArrayBuffer } from "../utils";
-
-
-
-
 
 /* -------------------------------
  * MajikContact Class
@@ -183,6 +180,30 @@ export class MajikContact {
       }
       throw e;
     }
+  }
+
+  async toContactCard(): Promise<MajikContactCard> {
+    let publicKeyBase64: string;
+    const anyPub: any = this.publicKey;
+    if (anyPub?.raw instanceof Uint8Array) {
+      publicKeyBase64 = arrayBufferToBase64(anyPub.raw.buffer);
+    } else {
+      const raw = await crypto.subtle.exportKey(
+        "raw",
+        this.publicKey as CryptoKey,
+      );
+      publicKeyBase64 = arrayBufferToBase64(raw);
+    }
+
+    return {
+      id: this.id,
+      label: this.meta?.label || "",
+      publicKey: publicKeyBase64,
+      fingerprint: this.fingerprint,
+      mlKey: this.mlKey,
+      edPublicKeyBase64: this.edPublicKeyBase64,
+      mlDsaPublicKeyBase64: this.mlDsaPublicKeyBase64,
+    };
   }
 
   async toJSON(): Promise<SerializedMajikContact> {
