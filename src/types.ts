@@ -21,15 +21,15 @@ export interface MajikMessageIdentityJSON {
   restricted: boolean;
 }
 
-export type SerializedMajikContact = {
+export type SerializedMajikContact<TMeta extends MajikContactMeta = MajikContactMeta> = {
   id: string;
   fingerprint: string;
-  meta?: MajikContactMeta;
+  meta?: TMeta; // Uses the generic type here
   publicKeyBase64: MajikMessagePublicKey;
   mlKey: string;
   majikah_registered?: boolean;
-  edPublicKeyBase64?: string; // Ed25519 public key, base64 (32 bytes)
-  mlDsaPublicKeyBase64?: string; // ML-DSA-87 public key, base64 (2592 bytes)
+  edPublicKeyBase64?: string; 
+  mlDsaPublicKeyBase64?: string; 
 };
 
 export interface MajikContactMeta {
@@ -40,16 +40,15 @@ export interface MajikContactMeta {
   updatedAt?: ISODateString;
 }
 
-export interface MajikContactData {
+export interface MajikContactData<TMeta extends MajikContactMeta = MajikContactMeta> {
   id: string;
-  // publicKey may be a WebCrypto `CryptoKey` or a raw-key wrapper { raw: Uint8Array }
   publicKey: CryptoKey | { raw: Uint8Array };
   fingerprint: string;
   mlKey: string;
-  meta?: MajikContactMeta;
+  meta?: Partial<TMeta>; // Allows partial data passed during initialization
   majikah_registered?: boolean;
-  edPublicKeyBase64?: string; // Ed25519 public key, base64 (32 bytes)
-  mlDsaPublicKeyBase64?: string; // ML-DSA-87 public key, base64 (2592 bytes)
+  edPublicKeyBase64?: string; 
+  mlDsaPublicKeyBase64?: string; 
 }
 
 export interface MajikContactCard {

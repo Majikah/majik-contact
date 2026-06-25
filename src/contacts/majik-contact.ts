@@ -17,7 +17,7 @@ import { arrayBufferToBase64, base64ToArrayBuffer } from "../utils";
  * MajikContact Class
  * ------------------------------- */
 
-export class MajikContact {
+export class MajikContact<TMeta extends MajikContactMeta = MajikContactMeta> {
   public readonly id: string;
   public readonly publicKey: CryptoKey | { raw: Uint8Array };
   public readonly fingerprint: string;
@@ -26,10 +26,10 @@ export class MajikContact {
   public readonly edPublicKeyBase64: string;
   public readonly mlDsaPublicKeyBase64: string;
 
-  public meta: MajikContactMeta;
+  public meta: TMeta;
   private majikah_registered?: boolean;
 
-  constructor(data: MajikContactData) {
+  constructor(data: MajikContactData<TMeta>) {
     this.assertId(data.id);
     this.assertPublicKey(data.publicKey);
     this.assertMLKey(data.mlKey);
@@ -42,24 +42,27 @@ export class MajikContact {
     this.edPublicKeyBase64 = data.edPublicKeyBase64 || "";
     this.mlDsaPublicKeyBase64 = data.mlDsaPublicKeyBase64 || "";
 
+    this.majikah_registered = data.majikah_registered;
+
     this.meta = {
-      label: data.meta?.label || "",
-      notes: data.meta?.notes || "",
-      blocked: data.meta?.blocked || false,
-      createdAt: data.meta?.createdAt || new Date().toISOString(),
-      updatedAt: data.meta?.updatedAt || new Date().toISOString(),
-    };
+      label: "",
+      notes: "",
+      blocked: false,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      ...data.meta,
+    } as TMeta;
   }
 
-  static create(
+  static create<TMeta extends MajikContactMeta = MajikContactMeta>(
     id: string,
     publicKey: CryptoKey | { raw: Uint8Array },
     mlKey: string,
     fingerprint: string,
-    meta?: Partial<MajikContactMeta>,
+    meta?: Partial<TMeta>,
     edPublicKeyBase64?: string,
     mlDsaPublicKeyBase64?: string,
-  ): MajikContact {
+  ): MajikContact<TMeta> {
     return new MajikContact({
       id,
       publicKey,
@@ -103,6 +106,26 @@ export class MajikContact {
 
   private updateTimestamp() {
     this.meta.updatedAt = new Date().toISOString();
+  }
+
+  /**
+   * Partially updates the contact's metadata.
+   * Supports updating both base fields and custom fields dynamically.
+   */
+  updateMeta(updates: Partial<TMeta>): this {
+    if (!updates || typeof updates !== "object" || Array.isArray(updates)) {
+      throw new MajikContactError(
+        "Metadata updates must be provided as a valid object",
+      );
+    }
+
+    this.meta = {
+      ...this.meta,
+      ...updates,
+    };
+
+    this.updateTimestamp();
+    return this;
   }
 
   updateLabel(label: string): this {
@@ -222,13 +245,15 @@ export class MajikContact {
   /**
    * Reconstruct a MajikContact from its serialized form
    */
-  static fromJSON(serialized: SerializedMajikContact): MajikContact {
+  static fromJSON<TMeta extends MajikContactMeta = MajikContactMeta>(
+    serialized: SerializedMajikContact<TMeta>,
+  ): MajikContact<TMeta> {
     try {
       const publicKeyRaw = new Uint8Array(
         base64ToArrayBuffer(serialized.publicKeyBase64),
       );
 
-      return new MajikContact({
+      return new MajikContact<TMeta>({
         id: serialized.id,
         fingerprint: serialized.fingerprint,
         meta: serialized.meta,
@@ -248,13 +273,13 @@ export class MajikContact {
    */
   static async fromIdentityJSON(
     identityJSON: MajikMessageIdentityJSON,
-  ): Promise<MajikContact> {
+  ): Promise<MajikContact<MajikContactMeta>> {
     try {
       const publicKeyRaw = new Uint8Array(
         base64ToArrayBuffer(identityJSON.public_key),
       );
 
-      const contactData: MajikContactData = {
+      const contactData: MajikContactData<MajikContactMeta> = {
         id: identityJSON.id,
         publicKey: { raw: publicKeyRaw },
         fingerprint: identityJSON.id,
