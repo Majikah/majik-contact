@@ -58,8 +58,8 @@
     "test:watch": "vitest"
   },
   "devDependencies": {
-    "@majikah/majik-key": "^0.2.9",
-    "typescript": "^6.0.3",
-    "vitest": "^4.1.9"
+    "@majikah/majik-key": "^0.3.3",
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.10"
   }
 }
