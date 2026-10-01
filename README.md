@@ -70,7 +70,7 @@ import { MajikContact } from '@majikah/majik-contact';
 
 const contact = MajikContact.create(
   "user-uuid",
-  publicKey, // CryptoKey or { raw: Uint8Array }
+  publicKey, // X25519RawKey { raw: Uint8Array }
   "ml-kem-public-key-string",
   "fingerprint-string",
   { label: "Alice", notes: "Met at the conference" }
