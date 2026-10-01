@@ -8,8 +8,9 @@ import {
   MajikContactData,
   MajikContactMeta,
   MajikMessageIdentityJSON,
-  MajikMessagePublicKey,
+  MajikKeyAddress,
   SerializedMajikContact,
+  X25519RawKey,
 } from "../types";
 import { arrayBufferToBase64, base64ToArrayBuffer } from "../utils";
 
@@ -56,7 +57,7 @@ export class MajikContact<TMeta extends MajikContactMeta = MajikContactMeta> {
 
   static create<TMeta extends MajikContactMeta = MajikContactMeta>(
     id: string,
-    publicKey: CryptoKey | { raw: Uint8Array },
+    publicKey: X25519RawKey,
     mlKey: string,
     fingerprint: string,
     meta?: Partial<TMeta>,
@@ -74,34 +75,39 @@ export class MajikContact<TMeta extends MajikContactMeta = MajikContactMeta> {
     });
   }
 
-  private assertId(id: string) {
-    if (!id || typeof id !== "string") {
-      throw new MajikContactError("Contact ID must be a non-empty string");
-    }
+  protected fail(message: string, _code: string, _field?: string): never {
+    throw new MajikContactError(message);
   }
 
-  private assertMLKey(key: string) {
-    if (!key || typeof key !== "string") {
-      throw new MajikContactError("ML Key must be a non-empty string");
-    }
+  protected assertId(id: string) {
+    if (!id || typeof id !== "string")
+      this.fail("Contact ID must be a non-empty string", "INVALID_ID", "id");
   }
 
-  private assertPublicKey(key: CryptoKey | { raw: Uint8Array }) {
-    // Accept either a WebCrypto CryptoKey (with .type === 'public')
-    // or a raw-key wrapper object that contains a Uint8Array `raw` field.
-    if (!key) throw new MajikContactError("Invalid public key");
+  protected assertMLKey(key: string) {
+    if (!key || typeof key !== "string")
+      this.fail("ML Key must be a non-empty string", "INVALID_ML_KEY", "mlKey");
+  }
+
+  protected assertPublicKey(key: X25519RawKey) {
+    if (!key)
+      this.fail("Invalid public key", "INVALID_PUBLIC_KEY", "publicKey");
     const anyKey: any = key as any;
     if (anyKey && typeof anyKey === "object") {
       if (anyKey.type === "public") return;
       if (anyKey.raw instanceof Uint8Array) return;
     }
-    throw new MajikContactError("Invalid public key");
+
+    this.fail("Invalid public key", "INVALID_PUBLIC_KEY", "publicKey");
   }
 
-  private assertFingerprint(fingerprint: string) {
-    if (!fingerprint || typeof fingerprint !== "string") {
-      throw new MajikContactError("Fingerprint must be a non-empty string");
-    }
+  protected assertFingerprint(fingerprint: string) {
+    if (!fingerprint || typeof fingerprint !== "string")
+      this.fail(
+        "Fingerprint must be a non-empty string",
+        "INVALID_FINGERPRINT",
+        "fingerprint",
+      );
   }
 
   private updateTimestamp() {
@@ -181,13 +187,13 @@ export class MajikContact<TMeta extends MajikContactMeta = MajikContactMeta> {
   }
 
   async getDisplayName(): Promise<string> {
-    return this.meta.label || (await this.getPublicKeyBase64());
+    return this.meta.label || (await this.getAddress());
   }
 
   /**
    * Support both CryptoKey and raw-key wrappers (fallbacks when WebCrypto X25519 unsupported)
    */
-  async getPublicKeyBase64(): Promise<MajikMessagePublicKey> {
+  async getAddress(): Promise<MajikKeyAddress> {
     try {
       // If it's a CryptoKey, export with SubtleCrypto
       const raw = await crypto.subtle.exportKey(
@@ -234,7 +240,7 @@ export class MajikContact<TMeta extends MajikContactMeta = MajikContactMeta> {
       id: this.id,
       fingerprint: this.fingerprint,
       meta: { ...this.meta },
-      publicKeyBase64: await this.getPublicKeyBase64(),
+      publicKeyBase64: await this.getAddress(),
       majikah_registered: this.majikah_registered,
       mlKey: this.mlKey,
       edPublicKeyBase64: this.edPublicKeyBase64,

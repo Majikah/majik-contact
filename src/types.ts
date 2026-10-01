@@ -1,8 +1,25 @@
 export type ISODateString = string;
 
-export type MajikMessageAccountID = string;
+/** Base64-encoded public key material. Safe to store, log, or transmit. */
+export type MajikKeyAddress = string;
 
-export type MajikMessagePublicKey = string;
+/** Base64-encoded SHA-256 digest of a MajikKey's X25519 public key. Doubles as the account `id`. */
+export type MajikKeyFingerprint = string;
+
+export type ED25519PublicKey = string;
+export type MLKEM768PublicKey = string;
+export type MLDSA87PublicKey = string;
+export type BitcoinPublicKey = string;
+
+export type ED25519RawPublicKey = Uint8Array;
+export type MLKEM768RawPublicKey = Uint8Array;
+export type MLDSA87RawPublicKey = Uint8Array;
+export type BitcoinRawPublicKey = Uint8Array;
+
+export interface X25519RawKey {
+  raw: Uint8Array;
+}
+
 
 export interface MAJIK_API_RESPONSE {
   success: boolean;
@@ -21,15 +38,17 @@ export interface MajikMessageIdentityJSON {
   restricted: boolean;
 }
 
-export type SerializedMajikContact<TMeta extends MajikContactMeta = MajikContactMeta> = {
+export type SerializedMajikContact<
+  TMeta extends MajikContactMeta = MajikContactMeta,
+> = {
   id: string;
   fingerprint: string;
   meta?: TMeta; // Uses the generic type here
-  publicKeyBase64: MajikMessagePublicKey;
+  publicKeyBase64: MajikKeyAddress;
   mlKey: string;
   majikah_registered?: boolean;
-  edPublicKeyBase64?: string; 
-  mlDsaPublicKeyBase64?: string; 
+  edPublicKeyBase64?: string;
+  mlDsaPublicKeyBase64?: string;
 };
 
 export interface MajikContactMeta {
@@ -40,15 +59,17 @@ export interface MajikContactMeta {
   updatedAt?: ISODateString;
 }
 
-export interface MajikContactData<TMeta extends MajikContactMeta = MajikContactMeta> {
+export interface MajikContactData<
+  TMeta extends MajikContactMeta = MajikContactMeta,
+> {
   id: string;
-  publicKey: CryptoKey | { raw: Uint8Array };
+  publicKey: X25519RawKey;
   fingerprint: string;
   mlKey: string;
   meta?: Partial<TMeta>; // Allows partial data passed during initialization
   majikah_registered?: boolean;
-  edPublicKeyBase64?: string; 
-  mlDsaPublicKeyBase64?: string; 
+  edPublicKeyBase64?: string;
+  mlDsaPublicKeyBase64?: string;
 }
 
 export interface MajikContactCard {
@@ -87,7 +108,6 @@ export interface SerializedMajikContactGroup {
   memberIds: string[];
   isSystem: boolean;
 }
-
 
 export interface MajikContactGroupSetOptions {
   /**
