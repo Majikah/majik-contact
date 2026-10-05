@@ -6,15 +6,15 @@ import {
   SYSTEM_GROUP_IDS,
   SYSTEM_GROUP_NAMES,
   SystemGroupId,
-} from "../constants";
-import { MajikContactGroupError } from "../errors";
+} from "../constants.js";
+import { MajikContactGroupError } from "../errors.js";
 import {
   MajikContactGroupData,
   MajikContactGroupMeta,
   MajikContactGroupSetOptions,
   SerializedMajikContactGroup,
-} from "../types";
-import { isSystemGroupId, normalizePhotoToBase64 } from "../utils";
+} from "../types.js";
+import { isSystemGroupId, normalizePhotoToBase64 } from "../utils.js";
 
 /* -------------------------------
  * MajikContactGroup Class

@@ -2,7 +2,7 @@
  * Types
  * ------------------------------- */
 
-import { MajikContactError } from "../errors";
+import { MajikContactError } from "../errors.js";
 import {
   MajikContactCard,
   MajikContactData,
@@ -11,8 +11,8 @@ import {
   MajikKeyAddress,
   SerializedMajikContact,
   X25519RawKey,
-} from "../types";
-import { arrayBufferToBase64, base64ToArrayBuffer } from "../utils";
+} from "../types.js";
+import { arrayBufferToBase64, base64ToArrayBuffer } from "../utils.js";
 
 /* -------------------------------
  * MajikContact Class

@@ -1,10 +1,10 @@
-export * from "./contacts/majik-contact";
-export * from "./contacts/majik-contact-group";
+export * from "./contacts/majik-contact.js";
+export * from "./contacts/majik-contact-group.js";
 
-export type * from "./types";
+export type * from "./types.js";
 
-export * from "./constants";
+export * from "./constants.js";
 
-export * from "./errors";
+export * from "./errors.js";
 
-export { normalizePhotoToBase64, isSystemGroupId } from "./utils";
+export { normalizePhotoToBase64, isSystemGroupId } from "./utils.js";

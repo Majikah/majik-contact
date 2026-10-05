@@ -2,8 +2,8 @@
  * Utilities
  * ================================ */
 
-import { SYSTEM_GROUP_IDS, SystemGroupId } from "./constants";
-import { MajikContactGroupError } from "./errors";
+import { SYSTEM_GROUP_IDS, SystemGroupId } from "./constants.js";
+import { MajikContactGroupError } from "./errors.js";
 
 // utils/utilities.ts
 export function arrayToBase64(data: Uint8Array): string {
