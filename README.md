@@ -1,6 +1,6 @@
 # Majik Contact
 
-[![Developed by Zelijah](https://img.shields.io/badge/Developed%20by-Zelijah-red?logo=github&logoColor=white)](https://thezelijah.world) ![GitHub Sponsors](https://img.shields.io/github/sponsors/jedlsf?style=plastic&label=Sponsors&link=https%3A%2F%2Fgithub.com%2Fsponsors%2Fjedlsf)
+[![Developed by Zelijah](https://img.shields.io/badge/Developed%20by-Zelijah-red?logo=github&logoColor=white&style=for-the-badge)](https://thezelijah.world) ![GitHub Sponsors](https://img.shields.io/github/sponsors/jedlsf?style=for-the-badge&label=Sponsors&link=https%3A%2F%2Fgithub.com%2Fsponsors%2Fjedlsf)
 
 A lightweight, cryptographically secure contact model for building zero-trust, end-to-end encrypted systems.
 
@@ -21,10 +21,10 @@ A lightweight, cryptographically secure contact model for building zero-trust, e
     - [Organizing Contacts into Groups](#organizing-contacts-into-groups)
     - [Advanced Group Operations](#advanced-group-operations)
   - [Related Projects](#related-projects)
-    - [Majik Message](#majik-message)
     - [Majik Signature](#majik-signature)
     - [Majik Key](#majik-key)
     - [Majik Envelope](#majik-envelope)
+    - [Majik Message](#majik-message)
   - [Contributing](#contributing)
   - [License](#license)
   - [Author](#author)
@@ -155,17 +155,8 @@ const allStaff = MajikContactGroup.merge([team, designGroup], {
 
 ## Related Projects
 
-### [Majik Message](https://message.majikah.solutions)
-Secure messaging platform using Majik Keys and Majik Signatures for identity-bound communication.
-
-[Read Docs](https://majikah.solutions/products/majik-message/docs) · [Microsoft Store](https://apps.microsoft.com/detail/9pmjgvzzjspn)
-
-[![Majik Message Microsoft App Store](https://get.microsoft.com/images/en-us%20light.svg)](https://apps.microsoft.com/detail/9pmjgvzzjspn)
-
-
-
 ### [Majik Signature](https://www.npmjs.com/package/@majikah/majik-signature)
-Hybrid post-quantum content signing — the signing engine used by `signContent()` and `signFile()`.
+Hybrid post-quantum content signing
 
 [Read Docs](https://majikah.solutions/products/majik-signature/docs) · [Microsoft Store](https://apps.microsoft.com/detail/9pl9g3xzvd1x)
 
@@ -183,6 +174,15 @@ Post-quantum group encryption — used to encrypt and share private personal inf
 
 [Read More Information](https://majikah.solutions/sdk/majik-envelope)
 
+### [Majik Message](https://message.majikah.solutions)
+Secure messaging platform using Majik Keys and Majik Signatures for identity-bound communication.
+
+[Read Docs](https://majikah.solutions/products/majik-message/docs) · [Microsoft Store](https://apps.microsoft.com/detail/9pmjgvzzjspn)
+
+[![Majik Message Microsoft App Store](https://get.microsoft.com/images/en-us%20light.svg)](https://apps.microsoft.com/detail/9pmjgvzzjspn)
+
+
+
 ---
 
 ## Contributing
@@ -199,7 +199,7 @@ If you want to contribute or help extend support, reach out via email. All contr
 
 ## Author
 
-Made with 💙 by [@thezelijah](https://github.com/jedlsf)
+Developed by **Josef Elijah Fabian (Zelijah)** | [Majikah Solutions OPC](https://majikah.solutions/about)
 
 **Developer**: Josef Elijah Fabian  
 **GitHub**: [https://github.com/jedlsf](https://github.com/jedlsf)  
